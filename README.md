@@ -1,6 +1,9 @@
 # Group Exam: Catching Pokemon
 A group consisting of Stefan, Nikki and Lam.
 
+Länk till figjam
+https://www.figma.com/board/PONsn3hDqwjZmxt6BYEEQg/Group-catching-pokemon?node-id=0-1&t=x5dY3tZ97nsOZjHc-1
+
 ## Uppgift
 
 - Användaren startar vid ett formulär och ni skall formulärvalidera följande
