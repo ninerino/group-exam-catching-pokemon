@@ -80,6 +80,11 @@ function placePokemon() {
         const imgElement = document.createElement('img');
         imgElement.src = `./assets/pokemons/${number}`;
         gameFieldRef.appendChild(imgElement);
-
     }
 }
+const battleAudio = document.querySelector('#battleAudio');
+const victoryAudio = document.querySelector('#victoryAudio');
+// victoryAudio.loop = true;
+// victoryAudio.play();
+// battleAudio.loop = true;
+// battleAudio.play()
