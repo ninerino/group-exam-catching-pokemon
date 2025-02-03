@@ -6,10 +6,10 @@ const log = (msg) => console.log(msg);
 document.querySelector('form').addEventListener('submit', (event) => {
     event.preventDefault();
     if(validateForm()) {
-        initGame()
+        initGame();
         // startGame();
-        
     }
+    placePokemon()
 });
 
 const nickRef = document.querySelector('#nick');
@@ -17,7 +17,7 @@ const ageRef = document.querySelector('#age');
 const boyRef = document.querySelector('#boy');
 const girlRef = document.querySelector('#girl');
 const formRef = document.querySelector('#form');
-const gameFieldRef = document.querySelector('#game-field');
+const gameFieldRef = document.querySelector('#gameField');
 
 
 function validateForm() {
@@ -57,8 +57,6 @@ function initGame() {
     randomizePokemon();
     formRef.classList.toggle('d-none');
     gameFieldRef.classList.toggle('d-none');
-    
-    console.log(oGameData);
 }
 
 function randomizePokemon() {
@@ -72,5 +70,16 @@ function randomizePokemon() {
         }
         oGameData.pokemonNumbers.push(fixedNr);
     }
-    console.log(oGameData.pokemonNumbers);
 };
+
+
+function placePokemon() {
+    for(let number of oGameData.pokemonNumbers) {
+        console.log(number);
+        // gameFieldRef
+        const imgElement = document.createElement('img');
+        imgElement.src = `./assets/pokemons/${number}`;
+        gameFieldRef.appendChild(imgElement);
+
+    }
+}
