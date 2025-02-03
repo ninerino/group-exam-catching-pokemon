@@ -2,17 +2,25 @@ const log = (msg) => console.log(msg);
 
 // I denna fil skriver ni all er kod
 
+
 document.querySelector('form').addEventListener('submit', (event) => {
     event.preventDefault();
-    validateForm();
+    if(validateForm()) {
+        initGame()
+        // startGame();
+
+    }
 });
+
+const nickRef = document.querySelector('#nick');
+const ageRef = document.querySelector('#age');
+const boyRef = document.querySelector('#boy');
+const girlRef = document.querySelector('#girl');
+const formRef = document.querySelector('#form');
+const gameFieldRef = document.querySelector('#game-field');
 
 
 function validateForm() {
-    const nickRef = document.querySelector('#nick');
-    const ageRef = document.querySelector('#age');
-    const boyRef = document.querySelector('#boy');
-    const girlRef = document.querySelector('#girl');
     const errorMsg = document.querySelector('#errorMsg');
 
     try {
@@ -28,6 +36,7 @@ function validateForm() {
             throw new Error('Du måste välja ett kön');
         };
         errorMsg.classList.add('d-none');
+        
         return true;
     } catch (error) {
         errorMsg.classList.remove('d-none');
@@ -35,4 +44,20 @@ function validateForm() {
         return false;
     };
     
+}
+
+function initGame() {
+    oGameData.trainerName = nickRef.value;
+    oGameData.trainerAge = ageRef.value;
+    if (boyRef.checked) {
+        oGameData.trainerGender = 'Boy';
+    } else if (girlRef.checked) {
+        oGameData.trainerGender = 'Girl';
+    }
+    formRef.classList.toggle('d-none');
+    gameFieldRef.classList.toggle('d-none');
+
+    console.log(oGameData);
+    // randomizePokemon();
+    // Lägg in data i vår oGameData.
 }

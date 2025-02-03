@@ -11,3 +11,7 @@ img {
     transition: all 3s linear;
 }
 
+.d-none {
+    display: none;
+}
+
