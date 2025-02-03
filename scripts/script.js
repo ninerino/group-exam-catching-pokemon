@@ -8,7 +8,7 @@ document.querySelector('form').addEventListener('submit', (event) => {
     if(validateForm()) {
         initGame()
         // startGame();
-
+        
     }
 });
 
@@ -22,12 +22,12 @@ const gameFieldRef = document.querySelector('#game-field');
 
 function validateForm() {
     const errorMsg = document.querySelector('#errorMsg');
-
+    
     try {
         if(nickRef.value.length < 5 || nickRef.value.length > 10) {
             nickRef.focus();
             throw new Error('Namn måste vara mellan 5 och 10 bokstäver');
-
+            
         }else if (isNaN(Number(ageRef.value)) || ageRef.value < 10 || ageRef.value > 15) {
             ageRef.focus();
             throw new Error('Ålder måste vara mellan 10 och 15');
@@ -54,10 +54,23 @@ function initGame() {
     } else if (girlRef.checked) {
         oGameData.trainerGender = 'Girl';
     }
+    randomizePokemon();
     formRef.classList.toggle('d-none');
     gameFieldRef.classList.toggle('d-none');
-
+    
     console.log(oGameData);
-    // randomizePokemon();
-    // Lägg in data i vår oGameData.
 }
+
+function randomizePokemon() {
+    for (let i = 1; i <= 10; i++ ) {
+        let randomValue = Math.floor(Math.random() * 151 ) + 1;
+        let fixedNr = String(randomValue).padStart(3, '0') + '.png';
+    
+        while(oGameData.pokemonNumbers.includes(fixedNr)) {
+            randomValue = Math.floor(Math.random() * 151 ) + 1;
+            fixedNr = String(randomValue).padStart(3, '0') + '.png';
+        }
+        oGameData.pokemonNumbers.push(fixedNr);
+    }
+    console.log(oGameData.pokemonNumbers);
+};
