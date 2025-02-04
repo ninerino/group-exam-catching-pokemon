@@ -143,9 +143,12 @@ function startGame() {
 }
 
 function endGame() {
-    // Stoppa timern
-    clearInterval(oGameData.timerId);
+    // Stoppa tiden
+    oGameData.endTimeInMilliseconds();
 
+    // Stoppa setInterval
+    clearInterval(oGameData.timerId);
+    
     // Dölj bilder
     const pkmnImgs = document.querySelectorAll('img');
     pkmnImgs.forEach( (img) => {
@@ -161,14 +164,51 @@ function endGame() {
     victoryAudio.volume = 0.1;
     victoryAudio.play();
 
-    viewHighscore();
+/*      <section class="high-score d-none" id="highScore">
+        <h1>Congratulations!</h1>
+        <h3 id="winMsg"></h3>
+        <ol class="highscore-list" id="highscoreList">
+          
+        </ol>
+        
+        <!-- Spela igen?-knapp -->
+        <button id="playAgainBtn">Play again?</button>
+        
+      </section>
+      
+    </section>*/
 
+    viewHighscore();
 }
 
+function viewHighscore() {
+    document.querySelector('#highScore').classList.remove('d-none')
+
+    let seconds = Math.round(oGameData.nmbrOfMilliseconds() / 10) / 100;
+    
+    // Vinstmeddelandet för aktuella spelet
+    document.querySelector('#winMsg').textContent = `Grattis ${oGameData.trainerName}! Du vann på ${seconds} sekunder`
+
+
+    
+    /*     
+    nmbrOfMilliseconds
+    trainerName : '',
+    trainerAge : 0,
+    trainerGender : '', 
+    */
+   
+   // High Score-listan från localStorage
+   const highscoreList = document.querySelector('#highscoreList');
+
+
+    // document.querySelector('button').addEventListener('click', initGame());
+}
+
+
 /*  // Visa highScore-modal med försök igen-knapp (initalt bara visa grattis! du klarade det på x sekunder, försök igen? innan vi är klara med localStorage)
- oGameData.endTimeInMilliseconds();
+ 
 
  // Jag vill ha något som räknar om millisekunder till sekunder så det i High Score syns 16.3 sekunder istället för 16307 exempelvis
- let seconds = Math.round(oGameData.nmbrOfMilliseconds() / 10) / 100;
 
  console.log(seconds); */
