@@ -107,15 +107,13 @@ function catchPokemon(img, number) {
             img.src = `./assets/pokemons/${number}.png`;
             oGameData.nmbrOfCaughtPokemons--;
         }
-        if(oGameData.nmbrOfCaughtPokemons === 10) {
-            // endGame();
+        if(oGameData.nmbrOfCaughtPokemons === 5) {
+            endGame();
         }
     })
 }
 
-const victoryAudio = document.querySelector('#victoryAudio');
-// victoryAudio.loop = true;
-// victoryAudio.play();
+
 
 function movePokemon() {
     oGameData.timerId = setInterval(() => {
@@ -142,6 +140,35 @@ function startGame() {
     
     oGameData.startTimeInMilliseconds();
     // Sparar exakta tiden i en variabel
-    
-    
 }
+
+function endGame() {
+    // Stoppa timern
+    clearInterval(oGameData.timerId);
+
+    // Dölj bilder
+    const pkmnImgs = document.querySelectorAll('img');
+    pkmnImgs.forEach( (img) => {
+        img.classList.add('d-none');
+    });
+
+    // Stoppa spelmusiken
+    battleAudio.pause();
+
+    // Starta vinstmusiken
+    const victoryAudio = document.querySelector('#victoryAudio');
+    victoryAudio.loop = true;
+    victoryAudio.volume = 0.1;
+    victoryAudio.play();
+
+    viewHighscore();
+
+}
+
+/*  // Visa highScore-modal med försök igen-knapp (initalt bara visa grattis! du klarade det på x sekunder, försök igen? innan vi är klara med localStorage)
+ oGameData.endTimeInMilliseconds();
+
+ // Jag vill ha något som räknar om millisekunder till sekunder så det i High Score syns 16.3 sekunder istället för 16307 exempelvis
+ let seconds = Math.round(oGameData.nmbrOfMilliseconds() / 10) / 100;
+
+ console.log(seconds); */
