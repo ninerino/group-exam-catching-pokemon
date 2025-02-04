@@ -1,8 +1,5 @@
 const log = (msg) => console.log(msg);
 
-// I denna fil skriver ni all er kod
-
-
 document.querySelector('form').addEventListener('submit', (event) => {
     event.preventDefault();
     if(validateForm()) {
@@ -17,8 +14,6 @@ document.querySelector('form').addEventListener('submit', (event) => {
 
         // Startar timern för att få pokemonen att röra på sig.
     }
-
-
 });
 
 const nickRef = document.querySelector('#nick');
@@ -27,7 +22,6 @@ const boyRef = document.querySelector('#boy');
 const girlRef = document.querySelector('#girl');
 const formRef = document.querySelector('#form');
 const gameFieldRef = document.querySelector('#gameField');
-
 
 function validateForm() {
     const errorMsg = document.querySelector('#errorMsg');
@@ -52,7 +46,6 @@ function validateForm() {
         errorMsg.textContent = error.message;
         return false;
     };
-
 }
 
 function initGame() {
@@ -113,8 +106,6 @@ function catchPokemon(img, number) {
     })
 }
 
-
-
 function movePokemon() {
     oGameData.timerId = setInterval(() => {
         for(let number of oGameData.pokemonNumbers) {
@@ -122,7 +113,6 @@ function movePokemon() {
             setPosition(pkmnImage);
         }
     }, 3000);
-
 }
 
 function setPosition(img) {
@@ -164,25 +154,11 @@ function endGame() {
     victoryAudio.loop = true;
     victoryAudio.volume = 0.1;
     victoryAudio.play();
-
-/*      <section class="high-score d-none" id="highScore">
-        <h1>Congratulations!</h1>
-        <h3 id="winMsg"></h3>
-        <ol class="highscore-list" id="highscoreList">
-
-        </ol>
-
-        <!-- Spela igen?-knapp -->
-        <button id="playAgainBtn">Play again?</button>
-
-      </section>
-
-    </section>*/
-
-    viewHighscore();
+    updateLocalStorage();
+    viewHighScore();
 }
 
-function viewHighscore() {
+function viewHighScore() {
     document.querySelector('#highScore').classList.remove('d-none')
 
 
@@ -199,35 +175,28 @@ function viewHighscore() {
 function updateLocalStorage() {
     const fromLocalStorage = JSON.parse(localStorage.getItem('highScore')) || [];
 
-    compareHighscore(fromLocalStorage);
+    compareHighScore(fromLocalStorage);
 
     localStorage.setItem('highScore', JSON.stringify(fromLocalStorage));
 }
 
-// Sortering av array från Storage
-let numbers = [5, 3, 8, 4, 2];
-numbers.sort((a, b) => a - b);
-console.log(numbers);
-//--------------------------------
+function compareHighScore(highScore) {
 
-   const trainer = {
-       name: oGameData.trainerName,
-       age: oGameData.trainerAge,
-       gender: oGameData.trainerGender,
-       time: oGameData.nmbrOfSeconds
-   }
+    const trainer = {
+        name: oGameData.trainerName,
+        age: oGameData.trainerAge,
+        gender: oGameData.trainerGender,
+        time: oGameData.nmbrOfSeconds
+    }
+
+    highScore.push(trainer);
 
 
+    if(highScore.length > 1) {
+        highScore.sort((a, b) => a.time - b.time);
+    }
 
-   // kontroll av high score mot spelarens score
-   // jämför mot objekt 10 i arrayen?
-//    fromLocalStorage.push(trainer);
-/* Bara lite pseudo
-
-om tid < nummer tio på listan || om det finns mindre än tio entries i highscorelistan
-localStorage.removeItem nr 10
-localStorage.setItem på rätt plats i arrayen (hur?)
-annars
-inget
-
-*/
+    if(highScore.length > 10){
+        highScore.pop();
+    }
+}
