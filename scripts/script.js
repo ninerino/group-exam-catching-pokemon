@@ -23,6 +23,23 @@ const girlRef = document.querySelector('#girl');
 const formRef = document.querySelector('#form');
 const gameFieldRef = document.querySelector('#gameField');
 
+document.querySelector('#playAgainBtn').addEventListener('click', () => {
+    // Göm gameField, visa formRef igen
+    formRef.classList.toggle('d-none');
+    gameFieldRef.classList.toggle('d-none');
+    document.querySelector('#highScore').classList.toggle('d-none')
+
+    // Sätt alla värden till "noll" igen
+
+    oGameData.init();
+    victoryAudio.pause();
+    victoryAudio.currentTime = 0;
+
+    const highscoreListRef = document.querySelector('#highscoreList');
+    highscoreListRef.textContent = '';
+
+} )
+
 function validateForm() {
     const errorMsg = document.querySelector('#errorMsg');
 
@@ -148,28 +165,32 @@ function endGame() {
 
     // Stoppa spelmusiken
     battleAudio.pause();
+    battleAudio.currentTime = 0;
 
     // Starta vinstmusiken
     const victoryAudio = document.querySelector('#victoryAudio');
     victoryAudio.loop = true;
     victoryAudio.volume = 0.1;
     victoryAudio.play();
-    updateLocalStorage();
-    viewHighScore();
+
+    viewHighScore(updateLocalStorage());
 }
 
-function viewHighScore() {
-    document.querySelector('#highScore').classList.remove('d-none')
-
+function viewHighScore(highScore) {
+    document.querySelector('#highScore').classList.toggle('d-none')
 
     // Vinstmeddelandet för aktuella spelet
-    document.querySelector('#winMsg').textContent = `Grattis ${oGameData.trainerName}! Du vann på ${oGameData.nmbrOfSeconds} sekunder`
+    document.querySelector('#winMsg').textContent = `Well done ${oGameData.trainerName}! Your time was ${oGameData.nmbrOfSeconds} seconds.`
 
-   // High Score-listan från localStorage
-   const highscoreList = document.querySelector('#highscoreList');
+    // High Score-listan från localStorage
+    const highscoreListRef = document.querySelector('#highscoreList');
 
+    highScore.forEach( (score) => {
+        const listItemElement = document.createElement('li');
+        listItemElement.innerText = `${score.name}, ${score.age} year, ${score.gender}, ${score.time} sec`;
+        highscoreListRef.appendChild(listItemElement);
+    });
 
-    // document.querySelector('button').addEventListener('click', initGame());
 }
 
 function updateLocalStorage() {
@@ -178,6 +199,8 @@ function updateLocalStorage() {
     compareHighScore(fromLocalStorage);
 
     localStorage.setItem('highScore', JSON.stringify(fromLocalStorage));
+
+    return fromLocalStorage;
 }
 
 function compareHighScore(highScore) {
