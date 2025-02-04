@@ -8,17 +8,17 @@ document.querySelector('form').addEventListener('submit', (event) => {
     if(validateForm()) {
         initGame();
         // initGame inkluderar funktionen randomizePokemon()
-        
+
         createPokemon();
         // Placerar pokemonen på spelfältet
-        
+
         startGame();
         // startGame
-        
+
         // Startar timern för att få pokemonen att röra på sig.
     }
-    
-    
+
+
 });
 
 const nickRef = document.querySelector('#nick');
@@ -31,28 +31,28 @@ const gameFieldRef = document.querySelector('#gameField');
 
 function validateForm() {
     const errorMsg = document.querySelector('#errorMsg');
-    
+
     try {
         if(nickRef.value.length < 5 || nickRef.value.length > 10) {
             nickRef.focus();
             throw new Error('Namn måste vara mellan 5 och 10 bokstäver');
-            
+
         }else if (isNaN(Number(ageRef.value)) || ageRef.value < 10 || ageRef.value > 15) {
             ageRef.focus();
             throw new Error('Ålder måste vara mellan 10 och 15');
-            
+
         } else if (!boyRef.checked && !girlRef.checked) {
             throw new Error('Du måste välja ett kön');
         };
         errorMsg.classList.add('d-none');
-        
+
         return true;
     } catch (error) {
         errorMsg.classList.remove('d-none');
         errorMsg.textContent = error.message;
         return false;
     };
-    
+
 }
 
 function initGame() {
@@ -72,7 +72,7 @@ function randomizePokemon() {
     for (let i = 1; i <= 10; i++ ) {
         let randomValue = Math.floor(Math.random() * 151 ) + 1;
         let fixedNr = String(randomValue).padStart(3, '0');
-        
+
         while(oGameData.pokemonNumbers.includes(fixedNr)) {
             randomValue = Math.floor(Math.random() * 151 ) + 1;
             fixedNr = String(randomValue).padStart(3, '0');
@@ -122,7 +122,7 @@ function movePokemon() {
             setPosition(pkmnImage);
         }
     }, 3000);
-    
+
 }
 
 function setPosition(img) {
@@ -137,7 +137,7 @@ function startGame() {
     battleAudio.volume = 0.1;
     battleAudio.play();
     movePokemon();
-    
+
     oGameData.startTimeInMilliseconds();
     // Sparar exakta tiden i en variabel
 }
@@ -145,10 +145,11 @@ function startGame() {
 function endGame() {
     // Stoppa tiden
     oGameData.endTimeInMilliseconds();
+    oGameData.nmbrOfSeconds = Math.round(oGameData.nmbrOfMilliseconds() / 10) / 100;
 
     // Stoppa setInterval
     clearInterval(oGameData.timerId);
-    
+
     // Dölj bilder
     const pkmnImgs = document.querySelectorAll('img');
     pkmnImgs.forEach( (img) => {
@@ -168,14 +169,14 @@ function endGame() {
         <h1>Congratulations!</h1>
         <h3 id="winMsg"></h3>
         <ol class="highscore-list" id="highscoreList">
-          
+
         </ol>
-        
+
         <!-- Spela igen?-knapp -->
         <button id="playAgainBtn">Play again?</button>
-        
+
       </section>
-      
+
     </section>*/
 
     viewHighscore();
@@ -184,20 +185,10 @@ function endGame() {
 function viewHighscore() {
     document.querySelector('#highScore').classList.remove('d-none')
 
-    let seconds = Math.round(oGameData.nmbrOfMilliseconds() / 10) / 100;
-    
+
     // Vinstmeddelandet för aktuella spelet
-    document.querySelector('#winMsg').textContent = `Grattis ${oGameData.trainerName}! Du vann på ${seconds} sekunder`
+    document.querySelector('#winMsg').textContent = `Grattis ${oGameData.trainerName}! Du vann på ${oGameData.nmbrOfSeconds} sekunder`
 
-
-    
-    /*     
-    nmbrOfMilliseconds
-    trainerName : '',
-    trainerAge : 0,
-    trainerGender : '', 
-    */
-   
    // High Score-listan från localStorage
    const highscoreList = document.querySelector('#highscoreList');
 
@@ -205,10 +196,38 @@ function viewHighscore() {
     // document.querySelector('button').addEventListener('click', initGame());
 }
 
+function updateLocalStorage() {
+    const fromLocalStorage = JSON.parse(localStorage.getItem('highScore')) || [];
 
-/*  // Visa highScore-modal med försök igen-knapp (initalt bara visa grattis! du klarade det på x sekunder, försök igen? innan vi är klara med localStorage)
- 
+    compareHighscore(fromLocalStorage);
 
- // Jag vill ha något som räknar om millisekunder till sekunder så det i High Score syns 16.3 sekunder istället för 16307 exempelvis
+    localStorage.setItem('highScore', JSON.stringify(fromLocalStorage));
+}
 
- console.log(seconds); */
+// Sortering av array från Storage
+let numbers = [5, 3, 8, 4, 2];
+numbers.sort((a, b) => a - b);
+console.log(numbers);
+//--------------------------------
+
+   const trainer = {
+       name: oGameData.trainerName,
+       age: oGameData.trainerAge,
+       gender: oGameData.trainerGender,
+       time: oGameData.nmbrOfSeconds
+   }
+
+
+
+   // kontroll av high score mot spelarens score
+   // jämför mot objekt 10 i arrayen?
+//    fromLocalStorage.push(trainer);
+/* Bara lite pseudo
+
+om tid < nummer tio på listan || om det finns mindre än tio entries i highscorelistan
+localStorage.removeItem nr 10
+localStorage.setItem på rätt plats i arrayen (hur?)
+annars
+inget
+
+*/
