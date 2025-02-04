@@ -7,10 +7,18 @@ document.querySelector('form').addEventListener('submit', (event) => {
     event.preventDefault();
     if(validateForm()) {
         initGame();
-        // startGame();
+        // initGame inkluderar funktionen randomizePokemon()
+
+        placePokemon();
+        // Placerar pokemonen på spelfältet
+
+        // startGame
+
+        movePokemon();
+        // Startar timern för att få pokemonen att röra på sig.
     }
-    placePokemon();
-    movePokemon();
+
+    
 });
 
 const nickRef = document.querySelector('#nick');
@@ -78,6 +86,7 @@ function placePokemon() {
         console.log(number);
         // gameFieldRef
         const imgElement = document.createElement('img');
+        setPosition(imgElement);
         imgElement.src = `./assets/pokemons/${number}.png`;
         imgElement.id = `pkmnID${number}`;
 
@@ -95,15 +104,17 @@ const victoryAudio = document.querySelector('#victoryAudio');
 // battleAudio.play()
 
 function movePokemon() {
-
-    setInterval(() => {
+    oGameData.timerId = setInterval(() => {
         for(let number of oGameData.pokemonNumbers) {
             const pkmnImage = document.querySelector(`#pkmnID${number}`);
-            const xPosition = oGameData.getLeftPosition();
-            const yPosition = oGameData.getTopPosition();
-    
-            pkmnImage.style.transform = `translate(${xPosition}px, ${yPosition}px)`;
+            setPosition(pkmnImage);
         }
     }, 3000);
 
+}
+
+function setPosition(img) {
+    const xPosition = oGameData.getLeftPosition();
+    const yPosition = oGameData.getTopPosition();
+    img.style.transform = `translate(${xPosition}px, ${yPosition}px)`;
 }

@@ -6,8 +6,8 @@
 
 .game-field {
     position: relative;
-    width: 1500px;
-    height: 1500px;
+    width: 100vw;
+    height: 100vh;
 }
 
 /* Ser till så att bilderna får korrekt storlek och deras rörelse animeras */
