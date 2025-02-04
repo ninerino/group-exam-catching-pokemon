@@ -83,35 +83,35 @@ function randomizePokemon() {
 
 function createPokemon() {
     for(let number of oGameData.pokemonNumbers) {
-        console.log(number);
         // gameFieldRef
         const imgElement = document.createElement('img');
         setPosition(imgElement);
         imgElement.src = `./assets/pokemons/${number}.png`;
         imgElement.id = `pkmnID${number}`;
-        imgElement.addEventListener('mouseover', () => {
-            
-            if(imgElement.src.endsWith(`assets/pokemons/${number}.png`)) {
-                imgElement.src = './assets/ball.webp';
-                oGameData.nmbrOfCaughtPokemons++
-                console.log(oGameData.nmbrOfCaughtPokemons)
-            } else if (imgElement.src.endsWith('assets/ball.webp')) {
-                imgElement.src = `./assets/pokemons/${number}.png`;
-                console.log('Det här ska ta bort en pokeboll')
-                oGameData.nmbrOfCaughtPokemons--
-                console.log(oGameData.nmbrOfCaughtPokemons)
-            }
-            // console.log(`I clicked pkmnID${number}`)
-            
-            // Vår source är "./assets/ball.webp"
-            
-        })
-        
+
+        // Lägger till addEventListener('mouseover') till img så man kan fånga pokemonen
+        catchPokemon(imgElement, number);
+
         gameFieldRef.appendChild(imgElement);
     }
 }
 
+function catchPokemon(img, number) {
+    img.addEventListener('mouseover', () => {
 
+        if(img.src.endsWith(`assets/pokemons/${number}.png`)) {
+            img.src = './assets/ball.webp';
+            oGameData.nmbrOfCaughtPokemons++;
+
+        } else if (img.src.endsWith('assets/ball.webp')) {
+            img.src = `./assets/pokemons/${number}.png`;
+            oGameData.nmbrOfCaughtPokemons--;
+        }
+        if(oGameData.nmbrOfCaughtPokemons === 10) {
+            // endGame();
+        }
+    })
+}
 
 const victoryAudio = document.querySelector('#victoryAudio');
 // victoryAudio.loop = true;
