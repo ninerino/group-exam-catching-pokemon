@@ -7,9 +7,18 @@ document.querySelector('form').addEventListener('submit', (event) => {
     event.preventDefault();
     if(validateForm()) {
         initGame();
-        // startGame();
+        // initGame inkluderar funktionen randomizePokemon()
+
+        placePokemon();
+        // Placerar pokemonen på spelfältet
+
+        // startGame
+
+        movePokemon();
+        // Startar timern för att få pokemonen att röra på sig.
     }
-    placePokemon()
+
+    
 });
 
 const nickRef = document.querySelector('#nick');
@@ -62,29 +71,50 @@ function initGame() {
 function randomizePokemon() {
     for (let i = 1; i <= 10; i++ ) {
         let randomValue = Math.floor(Math.random() * 151 ) + 1;
-        let fixedNr = String(randomValue).padStart(3, '0') + '.png';
+        let fixedNr = String(randomValue).padStart(3, '0');
     
         while(oGameData.pokemonNumbers.includes(fixedNr)) {
             randomValue = Math.floor(Math.random() * 151 ) + 1;
-            fixedNr = String(randomValue).padStart(3, '0') + '.png';
+            fixedNr = String(randomValue).padStart(3, '0');
         }
         oGameData.pokemonNumbers.push(fixedNr);
     }
 };
-
 
 function placePokemon() {
     for(let number of oGameData.pokemonNumbers) {
         console.log(number);
         // gameFieldRef
         const imgElement = document.createElement('img');
-        imgElement.src = `./assets/pokemons/${number}`;
+        setPosition(imgElement);
+        imgElement.src = `./assets/pokemons/${number}.png`;
+        imgElement.id = `pkmnID${number}`;
+
         gameFieldRef.appendChild(imgElement);
+        
+
     }
 }
+
 const battleAudio = document.querySelector('#battleAudio');
 const victoryAudio = document.querySelector('#victoryAudio');
 // victoryAudio.loop = true;
 // victoryAudio.play();
 // battleAudio.loop = true;
 // battleAudio.play()
+
+function movePokemon() {
+    oGameData.timerId = setInterval(() => {
+        for(let number of oGameData.pokemonNumbers) {
+            const pkmnImage = document.querySelector(`#pkmnID${number}`);
+            setPosition(pkmnImage);
+        }
+    }, 3000);
+
+}
+
+function setPosition(img) {
+    const xPosition = oGameData.getLeftPosition();
+    const yPosition = oGameData.getTopPosition();
+    img.style.transform = `translate(${xPosition}px, ${yPosition}px)`;
+}
