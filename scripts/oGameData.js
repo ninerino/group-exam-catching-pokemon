@@ -4,6 +4,7 @@ const oGameData = {
     startTime : 0,
     endTime : 0,
     timerId : null,
+    nmbrOfSeconds : 0,
     trainerName : '',
     trainerAge : 0,
     trainerGender : '',
