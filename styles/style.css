@@ -134,4 +134,10 @@ img {
 .high-score__win-message {
     line-height: 1.7rem;
 }
+
+.form-wrapper__canvas {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+}
     
