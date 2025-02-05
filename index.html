@@ -13,10 +13,11 @@
   <section class="form-wrapper" id="formWrapper">
     <!--  -->
     
+    
     <!-- Formuläret -->
     <form class="form" id="form">
-      <h1 class="form__title">Welcome young pokemon trainer</h1>
-      <p class="form__error-message" id="errorMsg"></p>
+      <h1 class="form__title">Welcome, young pokemon trainer</h1>
+      <p class="form__error-message d-none" id="errorMsg"></p>
       
       <!-- Skriv ditt namn -->
       <h2 class="form__nick-text">Please enter your name</h2>
@@ -25,14 +26,16 @@
       
       <!-- Pojke eller flicka? -->
       <p class="form__gender-text">Are you a boy? Or are you a girl?</p>
-      <label class="form__gender-label">
-        <input class="form__gender-radio" type="radio" name="gender" id="boy">
-        Boy
-      </label>
-      <label class="form__gender-label">
-        <input class="form__gender-radio" type="radio" name="gender" id="girl">
-        Girl
-      </label>
+      <section class="form__radio-container">
+        <label class="form__gender-label">
+          <input class="form__gender-radio" type="radio" name="gender" id="boy">
+          Boy
+        </label>
+        <label class="form__gender-label">
+          <input class="form__gender-radio" type="radio" name="gender" id="girl">
+          Girl
+        </label>
+      </section>
       
       <!-- Submit-knapp -->
       <button class="form__submit-btn" id="submitBtn">Let's catch some pokemons!</button>
@@ -41,18 +44,18 @@
   </section>
 
   <!-- Spelfältet -->
-  <section class="game-field-wrapper d-none" id="gameField" aria-label="none">
+  <section class="game-field d-none" id="gameField" aria-label="none">
     
     <!-- Vinstrutan -->
-    <section class="game-field high-score d-none" id="highScore">
-      <h2 class="game-field__text">Congratulations!</h2>
-      <h3 class="game-field__win-message" id="winMsg"></h3>
-      <ol class="game-field__highscore-list" id="highscoreList">
+    <section class="high-score d-none" id="highScore">
+      <h2 class="high-score__text">Congratulations!</h2>
+      <h3 class="high-score__win-message" id="winMsg"></h3>
+      <ol class="high-score__highscore-list" id="highscoreList">
         
       </ol>
       
       <!-- Spela igen?-knapp -->
-      <button class="game-field__btn" id="playAgainBtn">Play again?</button>
+      <button class="high-score__btn" id="playAgainBtn">Play again?</button>
       
     </section>
   </section>
