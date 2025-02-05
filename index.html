@@ -11,57 +11,54 @@
 <body>
   <!-- Detta är koden från mitt exempel, skriv gärna egen HTML om så önskas -->
   <section class="form-wrapper" id="formWrapper">
+    <!--  -->
     
     <!-- Formuläret -->
     <form class="form" id="form">
-      <h1>Welcome young pokemon trainer</h1>
-      <p id="errorMsg"></p>
-
+      <h1 class="form__title">Welcome young pokemon trainer</h1>
+      <p class="form__error-message" id="errorMsg"></p>
+      
       <!-- Skriv ditt namn -->
-      <h2>Please enter your name</h2>
-        <input id="nick" type="text" placeholder="Trainer nickname" />
-        <input id="age" type="text" placeholder="Trainer age">
-        
-        <!-- Pojke eller flicka? -->
-        <p>Are you a boy? Or are you a girl?</p>
-        <label>
-          <input type="radio" name="gender" id="boy">
-          Boy
-        </label>
-        <label>
-          <input type="radio" name="gender" id="girl">
-          Girl
-        </label>
-        
-        <!-- Submit-knapp -->
-        <button id="submitBtn">Let's catch some pokemons!</button>
-        
-      </form>
-    </section>
-    
-    
-    
-    <!-- Spelfältet -->
-    <section id="gameField" class="game-field d-none">
+      <h2 class="form__nick-text">Please enter your name</h2>
+      <input class="form__input-field" id="nick"  type="text" placeholder="Trainer nickname"/>
+      <input class="form__input-field" id="age"  type="text" placeholder="Trainer age">
       
-      <!-- Vinstrutan -->
-      <section class="high-score d-none" id="highScore">
-        <h2>Congratulations!</h2>
-        <h3 id="winMsg"></h3>
-        <ol class="highscore-list" id="highscoreList">
-          
-        </ol>
+      <!-- Pojke eller flicka? -->
+      <p class="form__gender-text">Are you a boy? Or are you a girl?</p>
+      <label class="form__gender-label">
+        <input class="form__gender-radio" type="radio" name="gender" id="boy">
+        Boy
+      </label>
+      <label class="form__gender-label">
+        <input class="form__gender-radio" type="radio" name="gender" id="girl">
+        Girl
+      </label>
+      
+      <!-- Submit-knapp -->
+      <button class="form__submit-btn" id="submitBtn">Let's catch some pokemons!</button>
+      
+    </form>
+  </section>
+
+  <!-- Spelfältet -->
+  <section class="game-field-wrapper d-none" id="gameField" aria-label="none">
+    
+    <!-- Vinstrutan -->
+    <section class="game-field high-score d-none" id="highScore">
+      <h2 class="game-field__text">Congratulations!</h2>
+      <h3 class="game-field__win-message" id="winMsg"></h3>
+      <ol class="game-field__highscore-list" id="highscoreList">
         
-        <!-- Spela igen?-knapp -->
-        <button id="playAgainBtn">Play again?</button>
-        
-      </section>
+      </ol>
+      
+      <!-- Spela igen?-knapp -->
+      <button class="game-field__btn" id="playAgainBtn">Play again?</button>
       
     </section>
-    
-    <!-- Läs in audioelementet från DOMen. För att spela .play(), för att pausa .pause(), för att starta om .load()  -->
-    <audio id="battleAudio" src="./assets/pokemon_champion_battle.mp3"></audio>
-    <audio id="victoryAudio" src="./assets/pokemon_win.mp3"></audio>
-  </body>
-  </html>
+  </section>
   
+  <!-- Läs in audioelementet från DOMen. För att spela .play(), för att pausa .pause(), för att starta om .load()  -->
+  <audio id="battleAudio" src="./assets/pokemon_champion_battle.mp3"></audio>
+  <audio id="victoryAudio" src="./assets/pokemon_win.mp3"></audio>
+</body>
+</html>
