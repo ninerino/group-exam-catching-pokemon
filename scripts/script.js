@@ -3,18 +3,23 @@ const log = (msg) => console.log(msg);
 document.querySelector('form').addEventListener('submit', (event) => {
     event.preventDefault();
     if(validateForm()) {
-        initGame();
         // initGame inkluderar funktionen randomizePokemon()
-
+        
+        canvas.classList.toggle("d-none")
+        initGame(); // denna innehåller Randomize Pokemon så utan denna så får inte createPokemon något att visa
         createPokemon();
-        // Placerar pokemonen på spelfältet
-
         startGame();
-        // startGame
-
+        drawOnCanvas();
+        
+            // Placerar pokemonen på spelfältet
+    
+            // startGame
         // Startar timern för att få pokemonen att röra på sig.
     }
 });
+
+
+
 
 const nickRef = document.querySelector('#nick');
 const ageRef = document.querySelector('#age');
@@ -22,15 +27,16 @@ const boyRef = document.querySelector('#boy');
 const girlRef = document.querySelector('#girl');
 const formRef = document.querySelector('#formWrapper');
 const gameFieldRef = document.querySelector('#gameField');
+const canvas = document.querySelector('#canvas');
+
 
 document.querySelector('#playAgainBtn').addEventListener('click', () => {
     // Göm gameField, visa formRef igen
     formRef.classList.toggle('d-none');
     gameFieldRef.classList.toggle('d-none');
     document.querySelector('#highScore').classList.toggle('d-none')
-
+    
     // Sätt alla värden till "noll" igen
-
     oGameData.init();
     victoryAudio.pause();
     victoryAudio.currentTime = 0;
@@ -74,10 +80,6 @@ function initGame() {
         oGameData.trainerGender = 'Girl';
     }
     randomizePokemon();
-    console.log("formRef toggld-none går igång")
-    formRef.classList.toggle('d-none');
-    console.log("formRef toggld-none går igång på riktigt")
-    gameFieldRef.classList.toggle('d-none');
 }
 
 function randomizePokemon() {
@@ -134,6 +136,7 @@ function movePokemon() {
     }, 3000);
 }
 
+
 function setPosition(img) {
     const xPosition = oGameData.getLeftPosition();
     const yPosition = oGameData.getTopPosition();
@@ -145,9 +148,11 @@ function startGame() {
     battleAudio.loop = true;
     battleAudio.volume = 0.1;
     battleAudio.play();
-    movePokemon();
-
-    oGameData.startTimeInMilliseconds();
+    movePokemon(); // Kan vi flytta denna högst upp så den börjar köra medan canvas kör?
+    setTimeout(() => {
+        oGameData.startTimeInMilliseconds();
+        
+    }, 3000);
     // Sparar exakta tiden i en variabel
 }
 
@@ -162,7 +167,7 @@ function endGame() {
     // Dölj bilder
     const pkmnImgs = document.querySelectorAll('img');
     pkmnImgs.forEach( (img) => {
-        img.classList.add('d-none');
+        img.remove();
     });
 
     // Stoppa spelmusiken
@@ -224,4 +229,84 @@ function compareHighScore(highScore) {
     if(highScore.length > 10){
         highScore.pop();
     }
+}
+
+function drawOnCanvas() {
+    if(canvas.getContext) {
+        // Skapar själva canvasen
+        const ctx = canvas.getContext("2d")
+
+        // Gör så canvasytan blir tom
+        // Behövs ifall man vill spela om
+        ctx.reset();
+        
+        // x och y-värden för vart JavaScript ska "rita" på canvas.
+        let xValue = 0;
+        let yValue = 0;
+
+        // Boolean som kontroll för vilken riktning if-satserna nedan ska köra-
+        let buildForward = true;
+
+        // Indexvärde som kontroll för när varje varv gjorts
+        let i = 0;
+        
+        // setInterval för att rita var 45 millisekunder
+        const myTimer = setInterval(() => {
+
+            // Vilken färg ska det jag ritar ha? Svart.
+            ctx.fillStyle = "rgb(0 0 0)";
+
+            // Vad ska ritas?
+            // En rektangel på specifika x och y-positioner.
+            // Ska även ha en storlek på "25" i längd och "25" i höjd.
+            ctx.fillRect(xValue, yValue, 25, 25);
+
+
+            // if-sats för höger och nedåt
+            if(buildForward === true) {
+
+                // Går höger
+                if(xValue <= 250 - (i*25)) {
+                    xValue += 25;
+                    
+                // Går nedåt
+                } else if (xValue === 275 - (i*25)) {
+                    yValue += 25;
+                }
+
+                // När ett halvt varv gjorts, "ändra riktning"
+                if(yValue === 125 - (i*25)) {
+                    buildForward = false;
+                }
+                
+                // Vänster och uppåt
+            } else if(buildForward === false) {
+
+                // Går vänster
+                if(xValue >= 25 + (i*25)) {
+                    xValue -= 25;
+                    
+                // Går uppåt
+                } else if (xValue === 0 + (i*25)) {
+                    yValue -= 25;
+                }
+                
+                // När resten av varvet gjorts, byt riktning igen
+                // Inkrementera i
+                if(yValue === 25 + (i*25) && i < 2) {
+                    buildForward = true;
+                    i++;
+                    
+                // Sista varvet så stoppas setInterval vid sista rutan
+                } else if(xValue ===  0 + (i*25) && i === 2) {
+                    ctx.fillRect(xValue, yValue, 25, 25);
+                    clearInterval(myTimer);
+                    canvas.classList.toggle("d-none");
+                    formRef.classList.toggle('d-none');
+                    gameFieldRef.classList.toggle('d-none');
+                
+                }
+            }
+        }, 42);
+    }   
 }
