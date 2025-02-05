@@ -20,7 +20,7 @@ const nickRef = document.querySelector('#nick');
 const ageRef = document.querySelector('#age');
 const boyRef = document.querySelector('#boy');
 const girlRef = document.querySelector('#girl');
-const formRef = document.querySelector('#form');
+const formRef = document.querySelector('#formWrapper');
 const gameFieldRef = document.querySelector('#gameField');
 
 document.querySelector('#playAgainBtn').addEventListener('click', () => {
@@ -74,7 +74,9 @@ function initGame() {
         oGameData.trainerGender = 'Girl';
     }
     randomizePokemon();
+    console.log("formRef toggld-none går igång")
     formRef.classList.toggle('d-none');
+    console.log("formRef toggld-none går igång på riktigt")
     gameFieldRef.classList.toggle('d-none');
 }
 
@@ -187,7 +189,7 @@ function viewHighScore(highScore) {
 
     highScore.forEach( (score) => {
         const listItemElement = document.createElement('li');
-        listItemElement.innerText = `${score.name}, ${score.age} year, ${score.gender}, ${score.time} sec`;
+        listItemElement.innerText = `${score.name}, ${score.age} years, ${score.gender}, ${score.time} sec`;
         highscoreListRef.appendChild(listItemElement);
     });
 
