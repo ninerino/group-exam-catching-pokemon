@@ -1,5 +1,5 @@
 const log = (msg) => console.log(msg);
-// När man trycker på 'Let's catch some pokemons' så körs denna då den på förstasidan
+// När man trycker på 'Let's catch some pokemons' så körs denna lyssnare på förstasidan
 document.querySelector('form').addEventListener('submit', (event) => {
     event.preventDefault();
     if(validateForm()) {
@@ -9,7 +9,9 @@ document.querySelector('form').addEventListener('submit', (event) => {
         // "createPokemon" skapar de img-element som varje pokemon tilldelas.
         createPokemon();
 
-        // "startGame()" kör igång ljudfilen, kör "movePokemon()" samt startar "startTimeInMilliseconds()".
+        // "playBattleAudio() kör igång ljudfilen"
+        playBattleAudio()
+        // "startGame()" kör "movePokemon()" samt startar "startTimeInMilliseconds()".
 
         // En animation på drygt tre sekunder som skapar en svart spiral som fyller hela skärmen innan man får se spelfältet.
         canvasRef.classList.toggle("d-none")
@@ -27,6 +29,7 @@ const gameFieldRef = document.querySelector('#gameField');
 const canvasRef = document.querySelector('#canvas');
 const battleAudioRef = document.querySelector('#battleAudio');
 const victoryAudioRef = document.querySelector('#victoryAudio');
+battleAudioRef.preload = "auto";
 
 // "Spela igen?"-knappen
 document.querySelector('#playAgainBtn').addEventListener('click', () => {
@@ -44,7 +47,7 @@ document.querySelector('#playAgainBtn').addEventListener('click', () => {
     // Töm highScore-listan
     const highscoreListRef = document.querySelector('#highscoreList');
     highscoreListRef.textContent = '';
-} )
+});
 
 // Funktion för att validera formuläret
 function validateForm() {
@@ -81,7 +84,7 @@ function validateForm() {
         errorMsgRef.textContent = error.message;
         return false;
     };
-}
+};
 
 // Funktion för att initiera spelet
 function initGame() {
@@ -99,7 +102,7 @@ function initGame() {
     }
     // Startar funktionen att randomisea vilka pokemon som väljs
     randomizePokemon();
-}
+};
 
 // Funktion för att slumpmässigt välja ut tio pokemon
 function randomizePokemon() {
@@ -117,7 +120,7 @@ function randomizePokemon() {
         }
         // Pushar den valda pokemon till arrayen
         oGameData.pokemonNumbers.push(fixedNr);
-    }
+    };
 };
 
 // Funktion för att skapa pokemonbilder på skärmen
@@ -134,8 +137,8 @@ function createPokemon() {
         catchPokemon(imgElement, number);
         // Lägger till imgElementet i gameField
         gameFieldRef.appendChild(imgElement);
-    }
-}
+    };
+};
 
 // Funktion för att fånga pokemon
 function catchPokemon(img, number) {
@@ -156,25 +159,30 @@ function catchPokemon(img, number) {
     })
 }
 
-// Funktion för start av spelets ljud samt anrop för att få pokemon att röra på sig
+// Funktion för att dölja animationen och formuläret samt visa spelfältet
+// Även att starta "movePokemon()" samt timern.
 function startGame() {
-    // Start av ljudfil under spelets gång
-    battleAudioRef.loop = true;
-    battleAudioRef.volume = 0.1;
-    battleAudioRef.play();
-    // Funktion för att alla pokemon får en ny position efter varje 3e sekund
-    // En fördröjning på 3 sekunder för start av startimer av spelet då pokemonen börjar inte röra sig förrän efter 3 sekunder
-    
+    // Togglar av form och canvas och togglar på gameField
     canvasRef.classList.toggle("d-none");
     formRef.classList.toggle('d-none');
     gameFieldRef.classList.toggle('d-none');
 
+    // Funktion för att alla pokemon får en ny position efter varje 3e sekund
+    // En fördröjning på 50 millisekunder för att förhindra en bugg där pokemonen ibland inte flyttar på sig efter att animationen är färdig
     setTimeout(() => {
         movePokemon();
         oGameData.startTimeInMilliseconds();
         
     }, 50);
-}
+};
+
+function playBattleAudio() {
+        // Start av ljudfil under spelets gång
+        battleAudioRef.loop = true;
+        battleAudioRef.volume = 0.5;
+        battleAudioRef.currentTime = 0.25;
+        battleAudioRef.play();
+};
 
 // Funktion för att ge alla pokemon en ny position efter varje 3e sekund
 function movePokemon() {
@@ -183,7 +191,7 @@ function movePokemon() {
         const pkmnImage = document.querySelector(`#pkmnID${number}`);
         // Anropar en funktion som ger varje pokemon i denna iteration en ny x och y position. Pokemonen skickas med som ett argument
         setPosition(pkmnImage);
-    }
+    };
     oGameData.timerId = setInterval(() => {
         for(let number of oGameData.pokemonNumbers) {
             const pkmnImage = document.querySelector(`#pkmnID${number}`);
@@ -191,7 +199,7 @@ function movePokemon() {
             setPosition(pkmnImage);
         }
     }, 3000);
-}
+};
 
 // Funktion för att ge varje bild en slumpmässig position på spelfältet
 function setPosition(img) {
@@ -201,7 +209,7 @@ function setPosition(img) {
     const yPosition = oGameData.getTopPosition();
     // Skickar positionerna till bilden
     img.style.transform = `translate(${xPosition}px, ${yPosition}px)`;
-}
+};
 
 // Funktion när spelet är avslutad då nmbrOfCaughtPokemons = 10
 function endGame() {
@@ -225,13 +233,13 @@ function endGame() {
 
     // Starta vinstmusiken
     victoryAudioRef.loop = true;
-    victoryAudioRef.volume = 0.1;
+    victoryAudioRef.volume = 0.5;
     // Då originalmusiken inte startar förrän efter 1 sekund så sätts currentTime till 1
     victoryAudioRef.currentTime = 1;
     victoryAudioRef.play();
     // Funktion för att visa highScorerutan anropas där det returnerade arrayen från funktionen updateLocalStorage skickas med som argument
     viewHighScore(updateLocalStorage());
-}
+};
 
 // Funktion för att visa High Score
 function viewHighScore(highScore) {
@@ -250,8 +258,7 @@ function viewHighScore(highScore) {
         listItemElement.innerText = `${score.name}, ${score.age} years, ${score.gender}, ${score.time} sec`;
         highscoreListRef.appendChild(listItemElement);
     });
-
-}
+};
 
 // Funktion som returnerar en array från localStorage
 function updateLocalStorage() {
@@ -265,7 +272,7 @@ function updateLocalStorage() {
     localStorage.setItem('highScore', JSON.stringify(fromLocalStorage));
 
     return fromLocalStorage;
-}
+};
 
 // Funktion för att jämföra tider på High Score
 function compareHighScore(highScore) {
@@ -276,7 +283,7 @@ function compareHighScore(highScore) {
         age: oGameData.trainerAge,
         gender: oGameData.trainerGender,
         time: oGameData.nmbrOfSeconds
-    }
+    };
     // Pushar tränardetaljerna till highScore
     highScore.push(trainer);
 
@@ -287,8 +294,8 @@ function compareHighScore(highScore) {
     // Om High Score har mer än tio entries så ska nummer elva tas bort
     if(highScore.length > 10){
         highScore.pop();
-    }
-}
+    };
+};
 
 // Den här funktionen hade vi kunnat lägga i en annan scriptfil
 function drawOnCanvas() {
@@ -343,6 +350,9 @@ function drawOnCanvas() {
             } else if(buildForward === false) {
                 if(xValue ===  0 && i === 2) {
                     clearInterval(myTimer);
+
+                    // Gömmer animationen, formuläret. Visar spelfältet.
+                    // Startar "movePokemon()" samt timern
                     startGame();
 
                 } else if(i === 2) {
@@ -367,5 +377,5 @@ function drawOnCanvas() {
                 }
             }
         }, 40);
-    }
-}
+    };
+};
