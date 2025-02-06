@@ -10,7 +10,6 @@ document.querySelector('form').addEventListener('submit', (event) => {
         createPokemon();
 
         // "startGame()" kör igång ljudfilen, kör "movePokemon()" samt startar "startTimeInMilliseconds()".
-        startGame();
 
         // En animation på drygt tre sekunder som skapar en svart spiral som fyller hela skärmen innan man får se spelfältet.
         canvasRef.classList.toggle("d-none")
@@ -56,17 +55,18 @@ function validateForm() {
         // Kontrollerar att namn är mellan 5 och 10 tecken
         if(nickRef.value.length < 5 || nickRef.value.length > 10) {
             nickRef.focus();
-            throw new Error('Namn måste vara mellan 5 och 10 bokstäver');
+            throw new Error('Your name may only be between 5 and 10 characters');
 
         // Kontrollerar att ålder är mellan 10 och 15
         // Kontrollerar även att input faktiskt är ett nummer
-        }else if (isNaN(Number(ageRef.value)) || ageRef.value < 10 || ageRef.value > 15) {
+        // /^\d+$ innebär att endast numerärer får synas, medan test returnerar true (vilket innebär att vi har ! före)
+        }else if (!/^\d+$/.test(ageRef.value) || ageRef.value < 10 || ageRef.value > 15) {
             ageRef.focus();
-            throw new Error('Ålder måste vara mellan 10 och 15');
+            throw new Error('Age must be between 10 and 15');
 
         // Kontrollerar att kön är valt
         } else if (!boyRef.checked && !girlRef.checked) {
-            throw new Error('Du måste välja ett kön');
+            throw new Error('You have to pick a gender');
         };
 
         // Lägger till klassen "d-none" till errorMsgRef ifall den råkar vara synlig från att nyligen ha visat ett errormeddelande.
@@ -163,18 +163,27 @@ function startGame() {
     battleAudioRef.volume = 0.1;
     battleAudioRef.play();
     // Funktion för att alla pokemon får en ny position efter varje 3e sekund
-    movePokemon();
     // En fördröjning på 3 sekunder för start av startimer av spelet då pokemonen börjar inte röra sig förrän efter 3 sekunder
-    setTimeout(() => {
-        // Funktionen anropas och sparar i ett nytt keyname 'starttime' i oGameData
-        oGameData.startTimeInMilliseconds();
+    
+    canvasRef.classList.toggle("d-none");
+    formRef.classList.toggle('d-none');
+    gameFieldRef.classList.toggle('d-none');
 
-    }, 3000);
+    setTimeout(() => {
+        movePokemon();
+        oGameData.startTimeInMilliseconds();
+        
+    }, 50);
 }
 
 // Funktion för att ge alla pokemon en ny position efter varje 3e sekund
 function movePokemon() {
     // Interval för att få varje pokemon att röra på sig var 3e sekund
+    for(let number of oGameData.pokemonNumbers) {
+        const pkmnImage = document.querySelector(`#pkmnID${number}`);
+        // Anropar en funktion som ger varje pokemon i denna iteration en ny x och y position. Pokemonen skickas med som ett argument
+        setPosition(pkmnImage);
+    }
     oGameData.timerId = setInterval(() => {
         for(let number of oGameData.pokemonNumbers) {
             const pkmnImage = document.querySelector(`#pkmnID${number}`);
@@ -198,7 +207,7 @@ function setPosition(img) {
 function endGame() {
     // Stoppa tiden
     oGameData.endTimeInMilliseconds();
-    // Den slutgiltiga tiden sparas där det avrundas till två decimaler
+    // Den slutgiltiga tiden omvandlas till sekunder sparas där det avrundas till två decimaler
     oGameData.nmbrOfSeconds = Math.round(oGameData.nmbrOfMilliseconds() / 10) / 100;
 
     // Stoppa setInterval
@@ -334,9 +343,7 @@ function drawOnCanvas() {
             } else if(buildForward === false) {
                 if(xValue ===  0 && i === 2) {
                     clearInterval(myTimer);
-                    canvasRef.classList.toggle("d-none");
-                    formRef.classList.toggle('d-none');
-                    gameFieldRef.classList.toggle('d-none');
+                    startGame();
 
                 } else if(i === 2) {
                     xValue -= 25;
