@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./styles/style.css" />
+  <script src="./scripts/oGameData.js"></script>
+  <script type="module" src="./scripts/script.js"></script>
+  <title>Gotta catch 'em all</title>
+</head>
+<body>
+  <section class="form-wrapper" id="formWrapper">
+    
+    <!-- Rityta för att få till en animation  -->
+    <canvas id="canvas" class="form-wrapper__canvas d-none"></canvas>
+
+    <!-- Inputformuläret -->
+    <form class="form" id="form">
+      <h1 class="form__title">Welcome, young pokemon trainer</h1>
+      <p class="form__error-message d-none" id="errorMsg"></p>
+      
+      <!-- Skriv ditt namn -->
+      <h2 class="form__nick-text">Please enter your name</h2>
+      <input class="form__input-field" id="nick"  type="text" placeholder="Trainer nickname"/>
+      <input class="form__input-field" id="age"  type="text" placeholder="Trainer age">
+      
+      <!-- Pojke eller flicka? -->
+      <p class="form__gender-text">Are you a boy? Or are you a girl?</p>
+      <section class="form__radio-container">
+        <label class="form__gender-label">
+          <input class="form__gender-radio" type="radio" name="gender" id="boy">
+          Boy
+        </label>
+        <label class="form__gender-label">
+          <input class="form__gender-radio" type="radio" name="gender" id="girl">
+          Girl
+        </label>
+      </section>
+
+      <!-- Submit-knapp -->
+      <button class="form__submit-btn" id="submitBtn">Let's catch some pokemons!</button>
+    </form>
+  </section>
+
+  <!-- Spelfältet -->
+  <section class="game-field d-none" id="gameField" aria-label="none">
+    
+    <!-- Vinstrutan -->
+    <section class="high-score d-none" id="highScore">
+      <h2 class="high-score__text">Congratulations!</h2>
+      <h3 class="high-score__win-message" id="winMsg"></h3>
+      <ol class="high-score__highscore-list" id="highscoreList">   
+      </ol>
+      
+      <!-- Spela igen?-knapp -->
+      <button class="high-score__btn" id="playAgainBtn">Play again?</button>
+    </section>
+  </section>
+  
+  <!-- Audiofilerna som används  -->
+  <audio id="battleAudio" src="./assets/pokemon_champion_battle.mp3"></audio>
+  <audio id="victoryAudio" src="./assets/pokemon_win.mp3"></audio>
+</body>
+</html>
