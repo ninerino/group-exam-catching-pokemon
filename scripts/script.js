@@ -13,7 +13,7 @@ document.querySelector('form').addEventListener('submit', (event) => {
         startGame();
 
         // En animation på drygt tre sekunder som skapar en svart spiral som fyller hela skärmen innan man får se spelfältet.
-        canvas.classList.toggle("d-none")
+        canvasRef.classList.toggle("d-none")
         drawOnCanvas();
     }
 });
@@ -25,7 +25,7 @@ const boyRef = document.querySelector('#boy');
 const girlRef = document.querySelector('#girl');
 const formRef = document.querySelector('#formWrapper');
 const gameFieldRef = document.querySelector('#gameField');
-const canvas = document.querySelector('#canvas');
+const canvasRef = document.querySelector('#canvas');
 const battleAudioRef = document.querySelector('#battleAudio');
 const victoryAudioRef = document.querySelector('#victoryAudio');
 
@@ -50,7 +50,7 @@ document.querySelector('#playAgainBtn').addEventListener('click', () => {
 // Funktion för att validera formuläret
 function validateForm() {
     // Sätter id errorMsg som "target" för vart felmeddelandena kommer visas
-    const errorMsg = document.querySelector('#errorMsg');
+    const errorMsgRef = document.querySelector('#errorMsg');
 
     try {
         // Kontrollerar att namn är mellan 5 och 10 tecken
@@ -69,16 +69,16 @@ function validateForm() {
             throw new Error('Du måste välja ett kön');
         };
 
-        // Lägger till klassen "d-none" till errorMsg ifall den råkar vara synlig från att nyligen ha visat ett errormeddelande.
-        errorMsg.classList.add('d-none');
+        // Lägger till klassen "d-none" till errorMsgRef ifall den råkar vara synlig från att nyligen ha visat ett errormeddelande.
+        errorMsgRef.classList.add('d-none');
 
         return true;
     } catch (error) {
         // Tar bort klassen "d-none" för att visa errormeddelandet
-        errorMsg.classList.remove('d-none');
+        errorMsgRef.classList.remove('d-none');
 
         // Visar felmeddelandet i errorMsg
-        errorMsg.textContent = error.message;
+        errorMsgRef.textContent = error.message;
         return false;
     };
 }
@@ -150,7 +150,7 @@ function catchPokemon(img, number) {
             oGameData.nmbrOfCaughtPokemons--;
         }
         // Om tio pokemons har fångats så ska endGame-funktionen anropas
-        if(oGameData.nmbrOfCaughtPokemons === 5) {
+        if(oGameData.nmbrOfCaughtPokemons === 10) {
             endGame();
         }
     })
@@ -283,9 +283,9 @@ function compareHighScore(highScore) {
 
 // Den här funktionen hade vi kunnat lägga i en annan scriptfil
 function drawOnCanvas() {
-    if(canvas.getContext) {
+    if(canvasRef.getContext) {
         // Skapar själva canvasen
-        const ctx = canvas.getContext("2d")
+        const ctx = canvasRef.getContext("2d")
 
         // Gör så canvasytan blir tom
         // Behövs ifall man vill spela om
@@ -332,9 +332,17 @@ function drawOnCanvas() {
 
                 // Vänster och uppåt
             } else if(buildForward === false) {
+                if(xValue ===  0 && i === 2) {
+                    clearInterval(myTimer);
+                    canvasRef.classList.toggle("d-none");
+                    formRef.classList.toggle('d-none');
+                    gameFieldRef.classList.toggle('d-none');
+
+                } else if(i === 2) {
+                    xValue -= 25;
 
                 // Går vänster
-                if(xValue >= 25 + (i*25)) {
+                } else if(xValue >= 25 + (i*25)) {
                     xValue -= 25;
 
                 // Går uppåt
@@ -349,15 +357,8 @@ function drawOnCanvas() {
                     i++;
 
                 // Sista varvet så stoppas setInterval vid sista rutan
-                } else if(xValue ===  0 + (i*25) && i === 2) {
-                    ctx.fillRect(xValue, yValue, 25, 25);
-                    clearInterval(myTimer);
-                    canvas.classList.toggle("d-none");
-                    formRef.classList.toggle('d-none');
-                    gameFieldRef.classList.toggle('d-none');
-
                 }
             }
-        }, 42);
+        }, 40);
     }
 }
